@@ -124,20 +124,52 @@ class Tree{
         
     }
 
-    height(node){
+    height(node = this.root){
+        if(node === null)
+            return -1
+        let left = 0
+        let right = 0
 
+        if(node.left) 
+            left += 1
+        if(node.right)
+            right += 1
+
+        left += this.height(node.left)
+        right += this.height(node.right)
+
+        return (left > right) ? left : right
     }
 
     depth(node){
+        let nodeAux = this.root
+        let cont = 0
 
+        while(nodeAux !== null){
+            if(node === nodeAux.data)
+                return cont
+            cont++
+            nodeAux = node < nodeAux ? nodeAux.left : nodeAux.right
+        }
+        return -1
     }
 
-    isBalanced(){
+    isBalanced(node = this.root){
+        if (node === null)
+            return 0
 
+        let left = this.height(node.left)
+        let right = this.height(node.right)
+
+        let treeHeight = left - right
+
+        return (treeHeight >= -1 && treeHeight <= 1) ? true : false
     }
 
     rebalance(){
-
+        if(this.isBalanced() >= -1 && this.isBalanced <= 1)
+            return('Already balanced')
+        return('Working on it!!!')
     }
 }
 
