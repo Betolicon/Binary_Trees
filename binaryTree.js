@@ -38,15 +38,74 @@ class Tree{
      
 
     insert(value){
+        if (this.root === null) {
+            this.root = new Node(value);
+            return this.root;
+        }
 
+        const insertValue = (node, value) =>{
+            if (value < node.data) {
+                if(node.left === null)
+                    node.left = new Node(value);
+                else
+                    insertValue(node.left, value);
+            }
+            else if (value > node.data){
+                if(node.right === null)
+                    node.right = new Node(value);
+                else
+                    insertValue(node.right, value);
+            }
+            return node;
+        }
+        return insertValue(this.root, value)
     }
 
     deleteItem(value){
+        const deleteRecursively = (node, value) =>{
+            if (node === null) {
+                return null
+            }
+    
+            if (value < node.data){
+                node.left = deleteRecursively(node.left, value)
+            }  
+            else if (value > node.data){
+                node.right = deleteRecursively(node.right, value)
+            }
+            else{
+                if (node.right === null)
+                    return node.right
+                else if (node.left === null)
+                    return node.left
+                let deleteNode = this.findSmallest(node.right)
+                node.data = deleteNode.data;
+                node.right = deleteRecursively(node.right, deleteNode.data)
+                }
+            return node
+        }
+        this.root = deleteRecursively(this.root, value)
 
     }
 
-    find(value){
+    findSmallest(value){
+            while(value.left !== null)
+                value = value.left
+            return value
+    }
 
+    find(value){
+        const findRec = (root, value) =>{
+            if (root === null)
+                return false
+            if (root.data === value)
+                return true
+            if (value < root.data)
+                return findRec(root.left, value)
+            else (value > root.data)
+                return findRec(root.right, value)
+        }
+        return findRec(this.root,value)
     }
 
     levelOrder(callback){
