@@ -1,11 +1,32 @@
 import pkg from './binaryTree.js'
 const { Tree } = pkg
 
-const array = [1, 3, 2, 1, 6, 5, 7]  
-
 const callback = (node) =>{
     console.log(node.data)
 }
+
+const maxNumber = () =>{
+    return Math.floor(Math.random() * 100)
+}
+
+const randomArray = (saveNumbers) =>{
+    const number = maxNumber()
+    for(let i = 0; i < number; i++){
+        saveNumbers(Math.floor(Math.random() * number))
+    }
+}
+
+const saveNumbers = (array) =>{
+    return (number)  => {
+        array.push(number)
+    } 
+}
+
+const array = []
+const arrayNumbers = saveNumbers(array)
+
+randomArray(arrayNumbers)
+
 
 const tree = new Tree(array)
 tree.levelOrder(callback)
