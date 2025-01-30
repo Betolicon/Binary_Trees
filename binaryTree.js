@@ -12,12 +12,11 @@ class Tree{
     }
 
     buildTree(array){
-        let arrayAux = []
         if(array.length === 0) return null
-        arrayAux = array.sort().filter((item, index) => array.indexOf(item) === index)
+        const arrayAux = Array.from(new Set(array.sort((a,b) => a - b)))
 
-        let middle = Math.floor(arrayAux.length/2)
-        let root = new Node(arrayAux[middle])
+        const middle = Math.floor(arrayAux.length/2)
+        const root = new Node(arrayAux[middle])
         root.left = this.buildTree(arrayAux.slice(0,middle))
         root.right = this.buildTree(arrayAux.slice(middle+1))
         return root
@@ -36,7 +35,6 @@ class Tree{
         }
     };
      
-
     insert(value){
         if (this.root === null) {
             this.root = new Node(value);
@@ -109,19 +107,73 @@ class Tree{
     }
 
     levelOrder(callback){
+        if(typeof callback !== 'function'){
+            throw new Error('A callback function is required')
+        }
+        const array = []
+        if(this.root){
+            array.push(this.root)
+            }
 
+        while(array.length > 0){
+            const node = array.shift()
+            callback(node)
+            if(node.left){ 
+                array.push(node.left)
+            }
+            if(node.right){
+                array.push(node.right)
+            }
+        }
+        
     }
 
     inOrder(callback){
+        if(typeof callback !== 'function'){
+            throw new Error('A callback function is required')
+        }
+
+        const traverse = (node) =>{
+            if(node === null)
+                return null
+            traverse(node.left)
+            callback(node)
+            traverse(node.right)
+
+        }
+        traverse(this.root)
 
     }
 
     preOrder(callback){
-        
+        if(typeof callback !== 'function'){
+            throw new Error('A callback function is required')
+        }
+
+        const traverse = (node) =>{
+            if(node === null)
+                return null
+            callback(node)
+            traverse(node.left)
+            traverse(node.right)
+
+        }
+        traverse(this.root)
     }
 
     postOrder(callback){
-        
+        if(typeof callback !== 'function'){
+            throw new Error('A callback function is required')
+        }
+
+        const traverse = (node) =>{
+            if(node === null)
+                return null
+            traverse(node.right)
+            callback(node)
+            traverse(node.left)
+        }
+        traverse(this.root)   
     }
 
     height(node = this.root){
@@ -167,9 +219,14 @@ class Tree{
     }
 
     rebalance(){
-        if(this.isBalanced() >= -1 && this.isBalanced <= 1)
+        if(this.isBalanced())
             return('Already balanced')
-        return('Working on it!!!')
+        const array = []
+        this.inOrder(node =>{
+            array.push(node.data)
+        })
+        this.root = this.buildTree(array)
+        return('Tree balanced')
     }
 }
 
